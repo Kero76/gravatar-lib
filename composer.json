@@ -1,9 +1,9 @@
 {
-  "name": "kero76/gravatarlib",
+  "name": "kero76/gravatar-lib",
   "description": "A simple library to integrate Gravatar service on app.",
   "keywords": [
     "gravatar",
-    "templating",
+    "integration",
     "twig"
   ],
   "type": "library",
@@ -13,7 +13,8 @@
     {
       "name": "Nicolas GILLE",
       "email": "nic.gille@gmail.com",
-      "homepage": "http://nicolas-gille.fr"
+      "homepage": "http://nicolas-gille.fr",
+      "role": "Developer"
     }
   ],
   "support": {
@@ -40,5 +41,5 @@
       "GravatarLibTest\\": "tests/"
     }
   },
-  "target-dir": "kero76/Gravatar"
+  "target-dir": "kero76/GravatarLib"
 }
