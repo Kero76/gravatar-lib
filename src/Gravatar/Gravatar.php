@@ -111,11 +111,18 @@
         /**
          * Gravatar constructor.
          *
+         * This constructor build on default object with default value for each attribute.
+         *
          * @param int $size
+         *  Size of the avatar use.
          * @param string $defaultImage
+         *  Add default image when the user doesn't have avatar.
          * @param bool $forceDefaultImage
+         *  Force the default image to avoid to show avatar.
          * @param string $maxRating
+         *  The rating of the image.
          * @param bool $secureUri
+         *  Indicate the user must used https instead of http protocol to get the image.
          *
          * @since 1.0
          */
@@ -343,6 +350,25 @@
 
             // and return the uri build.
             return $uri;
+        }
+
+        /**
+         * Build the Gravatar uri to get images.
+         *
+         * This is an alias for the method buildGravatarUri use to get uri more easily on twig.
+         *
+         * @param string $email
+         *  The mail to get image on Gravatar service.
+         * @param bool $hashEmail
+         *  Indicate if the mail must be hash in method or is already hash.
+         *
+         * @return string
+         *  The uri build.
+         * @see Gravatar->buildGravatarUri()
+         * @since 1.0
+         */
+        public function getUri(string $email, bool $hashEmail = true) {
+            return $this->buildGravatarUri($email, $hashEmail);
         }
 
         /**

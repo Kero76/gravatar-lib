@@ -1,5 +1,5 @@
 {
-  "name": "kero76/gravatar-lib",
+  "name": "nicolas-gille/gravatar-lib",
   "description": "A simple library to integrate Gravatar service on app.",
   "keywords": [
     "gravatar",
@@ -29,7 +29,7 @@
     "phpunit/phpunit": "^6.3"
   },
   "suggest": {
-    "twig/twig": ">=1.4.0"
+    "twig/twig": ">=2.0.0"
   },
   "autoload": {
     "psr-4": {
@@ -40,6 +40,5 @@
     "psr-4": {
       "GravatarLibTest\\": "tests/"
     }
-  },
-  "target-dir": "kero76/GravatarLib"
+  }
 }
