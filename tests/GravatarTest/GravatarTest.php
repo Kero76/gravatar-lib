@@ -49,7 +49,7 @@
         public function testInstantiateDefaultConstructor() {
             // Given - Instantiate all expected values.
             $sizeExpected = 80;
-            $defaultImageExpected = '404';
+            $defaultImageExpected = '';
             $ratingExpected = 'g';
 
             // When - Instantiate Gravatar Object.
@@ -196,5 +196,46 @@
             // When - Set MaxRating
             // Then - Thrown an InvalidArgumentException
             $gravatar->setMaxRating($ratingExpected);
+        }
+
+        /**
+         * Build the gravatar uri to show avatar.
+         *
+         * @covers Gravatar->buildGravatarUri(string, bool)
+         * @since 1.0
+         */
+        public function testbuildGravatarUri() {
+            // Given - Instantiate Gravatar object.
+            $gravatar = new Gravatar();
+            $mail = 'nic.gille@gmail.com';
+            $uriExpected = 'http://www.gravatar.com/avatar/ceaac5a38484c84251076c359cbf2ab2?s=80;r=g';
+
+            // When - Build uri.
+            $uri = $gravatar->buildGravatarUri($mail);
+
+            // Then - Compare uriExpected and uri.
+            $this->assertEquals($uriExpected, $uri);
+        }
+
+        /**
+         * Build the gravatar uri to show avatar.
+         *
+         * @covers Gravatar->buildGravatarUri(string, bool)
+         * @since 1.0
+         */
+        public function testBuildSpecificGravatarUri() {
+            // Given - Instantiate all expected values.
+            $sizeExpected = 120;
+            $ratingExpected = 'pg';
+            $defaultImageExpected = 'identicon';
+            $gravatar = new Gravatar($sizeExpected, $defaultImageExpected, false, $ratingExpected, false);
+            $mail = 'nic.gille@gmail.com';
+            $uriExpected = 'http://www.gravatar.com/avatar/ceaac5a38484c84251076c359cbf2ab2?s=120;r=pg;d=identicon';
+
+            // Then - Build uri.
+            $uri = $gravatar->buildGravatarUri($mail);
+
+            // Then - Compare uriExpected and uri.
+            $this->assertEquals($uriExpected, $uri);
         }
     }

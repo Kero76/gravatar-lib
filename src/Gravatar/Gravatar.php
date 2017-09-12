@@ -43,7 +43,7 @@
         /**
          * @var string
          */
-        public static $BASE_URI = 'https://www.gravatar.com/avatar/';
+        public static $BASE_URI = 'http://www.gravatar.com/avatar/';
 
         /**
          * Indicate the maximum size can take the avatar.
@@ -76,7 +76,7 @@
 
         /**
          * URL of the default image you would show instead of the default image present on Gravatar service.
-         * The default value is '404' gravatar image to use default image from Gravatar service.
+         * The default value is an empty string.
          *
          * @var string
          */
@@ -120,7 +120,7 @@
          * @since 1.0
          */
         public function __construct(
-            int $size = Gravatar::DEFAULT_SIZE, string $defaultImage = '404',
+            int $size = Gravatar::DEFAULT_SIZE, string $defaultImage = '',
             bool $forceDefaultImage = false, string $maxRating = 'g', bool $secureUri = false) {
 
             $this->setSize($size);
@@ -201,14 +201,15 @@
             } elseif (in_array($defaultImageToLower, $defaultKeywords) === true) {
                 // then, it replace default image by the default keyword present on Gravatar.
                 $this->defaultImage = $defaultImage;
+            } elseif ($defaultImage === '') {
+                // then, the user prefer using custom image.
+                $this->defaultImage = $defaultImage;
             } else {
                 // Then, throw on InvalidArgumentException because the value send on parameter is not valid.
                 throw new \InvalidArgumentException(
                     'The default image specified is not a valid URL or present as default value in Gravatar.'
                 );
             }
-
-
         }
 
         /**
@@ -283,9 +284,78 @@
          *
          * @param bool $secureUri
          *  Set if you would use the secure uri to get the avatar from the service.
+         *
          * @since 1.0
          */
         public function setSecureUri(bool $secureUri) {
             $this->secureUri = $secureUri;
+        }
+
+        /**
+         * Build the Gravatar uri to get images.
+         *
+         * @param string $email
+         *  The mail to get image on Gravatar service.
+         * @param bool $hashEmail
+         *  Indicate if the mail must be hash in method or is already hash.
+         *
+         * @return string
+         *  The uri build.
+         * @since 1.0
+         */
+        public function buildGravatarUri(string $email, bool $hashEmail = true): string {
+            // Build start of the uri to check if the user call the method in secure or unsecured link.
+            $uri = '';
+            if ($this->isSecureUri() === true) {
+                $uri = Gravatar::$BASE_SECURE_URI;
+            } else {
+                $uri = Gravatar::$BASE_URI;
+            }
+
+            // Then, add email at the end of the uri.
+            if ($hashEmail === true && !empty($email)) {
+                // if necessary, hash the mail and add it to the end of the uri.
+                $uri .= $this->hashEmail($email);
+            } elseif (!empty($email)) {
+                // or add it directly
+                $uri .= $email;
+            } else {
+                // or fill the end of the uri with 32 '0' char.
+                $uri .= str_repeat('0', 32);
+            }
+
+            // To conclude, build the parameters section of the uri.
+            $params = array();
+            $params[] = 's=' . $this->getSize();
+            $params[] = 'r=' . $this->getMaxRating();
+
+            // If default image isn't empty,
+            if ($this->getDefaultImage() !== '') {
+                // the user would use custom image.
+                $params[] = 'd=' . $this->getDefaultImage();
+            }
+
+            // If the user must force default image, add the last parameter.
+            if ($this->isForceDefaultImage() === true) {
+                $params[] = 'f=y';
+            }
+            $uri .= (!empty($params)) ? '?' . implode(';', $params) : '';
+
+            // and return the uri build.
+            return $uri;
+        }
+
+        /**
+         * Hash the mail get in parameter.
+         *
+         * @param $emailToHash
+         *  The mail at hash.
+         *
+         * @return string
+         *  Email hash with md5 algorithm.
+         * @since 1.0
+         */
+        private function hashEmail($emailToHash) {
+            return hash('md5', strtolower(trim($emailToHash)));
         }
     }
